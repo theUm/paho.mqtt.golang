@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"os"
 
-	MQTT "github.com/eclipse/paho.mqtt.golang"
+	MQTT "github.com/90poe/paho.mqtt.golang"
 )
 
 var brokerLoad = make(chan bool)
