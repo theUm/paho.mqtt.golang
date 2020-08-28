@@ -17,7 +17,7 @@ package mqtt
 import (
 	"net/url"
 
-	"github.com/eclipse/paho.mqtt.golang/packets"
+	"github.com/90poe/paho.mqtt.golang/packets"
 	"sync"
 )
 
