@@ -219,6 +219,12 @@ var (
 	ErrConnStatusReconnecting = errors.New("conn in the reconnecting status")
 )
 
+var (
+	ErrPublishUnknownPayload   = errors.New("unknown payload type")
+	ErrPublishNoMsgIDAvailable = errors.New("no message IDs available")
+	ErrPublishTimeout          = errors.New("publish was broken by timeout")
+)
+
 // Connect will create a connection to the message broker, by default
 // it will attempt to connect at v3.1.1 and auto retry at v3.1 if that
 // fails
@@ -612,7 +618,7 @@ func (c *client) Publish(topic string, qos byte, retained bool, payload interfac
 		token.setError(ErrNotConnected)
 		return token
 	case c.connectionStatus() == reconnecting && qos == 0:
-		token.flowComplete()
+		token.setError(ErrConnStatusReconnecting)
 		return token
 	}
 	pub := packets.NewControlPacket(packets.Publish).(*packets.PublishPacket)
@@ -627,14 +633,14 @@ func (c *client) Publish(topic string, qos byte, retained bool, payload interfac
 	case bytes.Buffer:
 		pub.Payload = p.Bytes()
 	default:
-		token.setError(fmt.Errorf("unknown payload type"))
+		token.setError(ErrPublishUnknownPayload)
 		return token
 	}
 
 	if pub.Qos != 0 && pub.MessageID == 0 {
 		mID := c.getID(token)
 		if mID == 0 {
-			token.setError(fmt.Errorf("no message IDs available"))
+			token.setError(ErrPublishNoMsgIDAvailable)
 			return token
 		}
 		pub.MessageID = mID
@@ -657,7 +663,7 @@ func (c *client) Publish(topic string, qos byte, retained bool, payload interfac
 		select {
 		case c.obound <- &PacketAndToken{p: pub, t: token}:
 		case <-time.After(publishWaitTimeout):
-			token.setError(errors.New("publish was broken by timeout"))
+			token.setError(ErrPublishTimeout)
 		}
 	}
 	return token
