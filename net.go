@@ -15,7 +15,6 @@
 package mqtt
 
 import (
-	"fmt"
 	"net"
 	"reflect"
 	"strings"
@@ -270,7 +269,6 @@ func startOutgoingComms(conn net.Conn,
 				}
 
 				if err := msg.Write(conn); err != nil {
-					err = fmt.Errorf("<-obound Write: %+v: %w", msg, err)
 					ERROR.Println(NET, "outgoing reporting error", err)
 					pub.t.setError(err)
 					// report error if it's not due to the connection being closed elsewhere
@@ -299,7 +297,6 @@ func startOutgoingComms(conn net.Conn,
 				}
 				DEBUG.Println(NET, "obound priority msg to write, type", reflect.TypeOf(msg.p))
 				if err := msg.p.Write(conn); err != nil {
-					err = fmt.Errorf("<-oboundp Write: %v: %w", msg, err)
 					ERROR.Println(NET, "outgoing reporting error", err)
 					if msg.t != nil {
 						msg.t.setError(err)
@@ -322,7 +319,6 @@ func startOutgoingComms(conn net.Conn,
 				}
 				DEBUG.Println(NET, "obound from incomming msg to write, type", reflect.TypeOf(msg.p))
 				if err := msg.p.Write(conn); err != nil {
-					err = fmt.Errorf("<-oboundFromIncomming Write: msg=%+v :%w", msg, err)
 					ERROR.Println(NET, "outgoing reporting error", err)
 					if msg.t != nil {
 						msg.t.setError(err)
@@ -393,7 +389,7 @@ func startComms(conn net.Conn, // Network connection (must be active)
 					break
 				}
 				if ic.err != nil {
-					outError <- fmt.Errorf("startIncommingComms ic.err: %w", ic.err)
+					outError <- ic.err
 					break
 				}
 				if ic.outbound != nil {
@@ -410,7 +406,7 @@ func startComms(conn net.Conn, // Network connection (must be active)
 					oboundErr = nil
 					break
 				}
-				outError <- fmt.Errorf("startOutgoingComms: %w", err)
+				outError <- err
 			}
 		}
 	}()

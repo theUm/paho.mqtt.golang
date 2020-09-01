@@ -552,7 +552,6 @@ func (c *client) startCommsWorkers(conn net.Conn, inboundFromStore <-chan packet
 					commsErrors = nil
 					continue
 				}
-				err = fmt.Errorf("startComms: %w", err)
 				ERROR.Println(CLI, "Connect comms goroutine - error triggered", err)
 				go c.internalConnLost(err) // no harm in calling this if the connection is already down (better than stopping!)
 				continue
