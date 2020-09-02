@@ -179,6 +179,8 @@ func startIncommingComms(conn net.Conn,
 					continue
 				}
 
+				DEBUG.Printf("INCOMING MESSAGE: %s -> %s", msg.Details().MessageID, reflect.TypeOf(msg).String())
+
 				DEBUG.Println(NET, "try to getInboundPacket with mID: ", msg.Details().MessageID)
 				inPkt := c.getInboundPacket(msg.Details().MessageID)
 				DEBUG.Println(NET, "try to check if it is pub packet: ", msg.Details().MessageID)
