@@ -174,6 +174,11 @@ func startIncommingComms(conn net.Conn,
 				}
 				msg = ibMsg.cp
 
+				if msg == nil {
+					DEBUG.Println(NET, "incoming message is nil, drop it")
+					continue
+				}
+
 				DEBUG.Println(NET, "try to getInboundPacket with mID: ", msg.Details().MessageID)
 				inPkt := c.getInboundPacket(msg.Details().MessageID)
 				DEBUG.Println(NET, "getInboundPacket with got: ", inPkt.Details())
