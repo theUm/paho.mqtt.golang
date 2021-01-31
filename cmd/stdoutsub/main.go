@@ -25,7 +25,7 @@ import (
 	"syscall"
 	"time"
 
-	MQTT "github.com/90poe/paho.mqtt.golang"
+	MQTT "github.com/theUm/paho.mqtt.golang"
 )
 
 func onMessageReceived(client MQTT.Client, message MQTT.Message) {

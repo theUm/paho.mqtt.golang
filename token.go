@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/90poe/paho.mqtt.golang/packets"
+	"github.com/theUm/paho.mqtt.golang/packets"
 )
 
 // PacketAndToken is a struct that contains both a ControlPacket and a

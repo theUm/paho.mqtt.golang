@@ -47,7 +47,7 @@ import (
 	"io/ioutil"
 	"time"
 
-	MQTT "github.com/90poe/paho.mqtt.golang"
+	MQTT "github.com/theUm/paho.mqtt.golang"
 )
 
 func NewTLSConfig() *tls.Config {
